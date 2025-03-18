@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void merge(int arr[], int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+    int l[n1], r[n2];
+
+    for (int i = 0; i < n1; i++) {
+        l[i] = arr[left + i];
+    }
+    for (int j = 0; j < n2; j++) {
+        r[j] = arr[mid + 1 + j];
+    }
+
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+        if (l[i] <= r[j]) {
+            arr[k++] = l[i++];
+        } else {
+            arr[k++] = r[j++];
+        }
+    }
+    while (i < n1) {
+        arr[k++] = l[i++];
+    }
+    while (j < n2) {
+        arr[k++] = r[j++];
+    }
+}
+
+void mergesort(int arr[], int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+        mergesort(arr, left, mid);
+        mergesort(arr, mid + 1, right);
+        merge(arr, left, mid, right);
+    }
+}
+
+void array(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int n;
+
+
+    srand(time(NULL));
+
+    printf("Enter the size of the array (n): ");
+    scanf("%d", &n);
+
+    int arr[n];
+
+
+    printf("Array elements (randomly generated):\n");
+    for (int i = 0; i < n; i++) {
+
+        arr[i] = (rand() % 1000) * (rand() % 1000000);
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+
+
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock();
+
+
+    mergesort(arr, 0, n - 1);
+
+    end = clock();
+
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+
+    printf("Array after Merge Sort:\n");
+    array(arr, n);
+
+
+    printf("Time taken for Merge Sort: %f seconds\n", cpu_time_used);
+
+    printf("Time complexity of Merge Sort is O(n log n)\n");
+
+    return 0;
+}
+
