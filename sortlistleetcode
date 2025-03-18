@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+// Helper function to split the linked list into two halves
+struct ListNode* splitList(struct ListNode* head) {
+    if (!head || !head->next) return NULL;
+    
+    struct ListNode* slow = head;
+    struct ListNode* fast = head->next;
+
+    // Move slow by 1 step and fast by 2 steps to find the middle of the list
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    struct ListNode* mid = slow->next;
+    slow->next = NULL;  // Split the list into two halves
+    return mid;
+}
+
+// Merge two sorted linked lists into a single sorted linked list
+struct ListNode* mergeLists(struct ListNode* l1, struct ListNode* l2) {
+    struct ListNode* dummy = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct ListNode* current = dummy;
+
+    while (l1 && l2) {
+        if (l1->val < l2->val) {
+            current->next = l1;
+            l1 = l1->next;
+        } else {
+            current->next = l2;
+            l2 = l2->next;
+        }
+        current = current->next;
+    }
+
+    // Attach the remaining nodes if any
+    if (l1) current->next = l1;
+    if (l2) current->next = l2;
+
+    return dummy->next;
+}
+
+// Merge Sort for linked list
+struct ListNode* mergeSort(struct ListNode* head) {
+    if (!head || !head->next) return head;
+
+    // Split the list into two halves
+    struct ListNode* mid = splitList(head);
+
+    // Recursively sort both halves
+    struct ListNode* left = mergeSort(head);
+    struct ListNode* right = mergeSort(mid);
+
+    // Merge the sorted halves
+    return mergeLists(left, right);
+}
+
+// Function to create a new node
+struct ListNode* createNode(int val) {
+    struct ListNode* newNode = (struct ListNode*)malloc(sizeof(struct ListNode));
+    newNode->val = val;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to print the linked list
+void printList(struct ListNode* head) {
+    struct ListNode* temp = head;
+    while (temp != NULL) {
+        printf("%d", temp->val);
+        if (temp->next != NULL) printf("->");
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+// Function to push a new node at the end of the list
+void push(struct ListNode** head_ref, int new_val) {
+    struct ListNode* new_node = createNode(new_val);
+    new_node->next = *head_ref;
+    *head_ref = new_node;
+}
+
+// Main function that will be used to sort the linked list
+struct ListNode* sortList(struct ListNode* head) {
+    return mergeSort(head);
+}
