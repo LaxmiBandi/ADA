@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+
+int partition(int arr[], int low, int high) {
+    int pivot = arr[low];
+    int i = low + 1;
+    int j = high;
+
+    while (i <= j) {
+
+        while (i <= high && arr[i] <= pivot) {
+            i++;
+        }
+
+        while (arr[j] > pivot && j >= low) {
+            j--;
+        }
+
+        if (i < j) {
+
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+        else {
+
+            int temp = arr[low];
+            arr[low] = arr[j];
+            arr[j] = temp;
+            return j;
+        }
+    }
+    return low;
+}
+
+void quicksort(int arr[], int low, int high) {
+    if (low < high) {
+        int pivot = partition(arr, low, high);
+        quicksort(arr, low, pivot - 1);
+        quicksort(arr, pivot + 1, high);
+    }
+}
+
+// Main function
+int main() {
+    int n;
+    printf("Enter n: ");
+    scanf("%d", &n);
+
+    int arr[n];
+
+
+    for (int i = 0; i < n; i++) {
+        arr[i] = rand() % 200;
+    }
+
+
+    printf("Unsorted array: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+
+    clock_t start_time = clock();
+
+    quicksort(arr, 0, n - 1);
+
+    clock_t end_time = clock();
+
+
+
+    printf("Sorted array: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+
+    double time_taken = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+
+    printf("Time taken for sorting: %.6f seconds\n", time_taken);
+
+    return 0;
+}
