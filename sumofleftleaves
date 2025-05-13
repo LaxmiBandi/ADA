@@ -1,0 +1,30 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+// Helper function to check if a node is a leaf
+int isLeaf(struct TreeNode* node) {
+    return node && !node->left && !node->right;
+}
+
+// Main function to calculate sum of left leaves
+int sumOfLeftLeaves(struct TreeNode* root) {
+    if (root == NULL) return 0;
+
+    int sum = 0;
+
+    // If left child is a leaf, add its value
+    if (isLeaf(root->left)) {
+        sum += root->left->val;
+    }
+
+    // Recursively check left and right subtree
+    sum += sumOfLeftLeaves(root->left);
+    sum += sumOfLeftLeaves(root->right);
+
+    return sum;
+}
